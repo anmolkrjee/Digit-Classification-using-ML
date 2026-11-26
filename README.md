@@ -1,52 +1,41 @@
 # Handwritten Digit Recognizer
 
-This project is a Streamlit application for recognizing handwritten digits. Draw a digit on the canvas and the app will resize it to `28 x 28` pixels, apply the project preprocessing, and predict a digit from `0` to `9` using the trained Histogram Gradient Boosting model.
+This Streamlit application recognizes handwritten digits from a drawing canvas. It resizes the drawing to `28 x 28` pixels, applies the project preprocessing, and predicts a digit from `0` to `9` using the trained Histogram Gradient Boosting model.
 
-## Clone the project from GitHub
+## Clone the project
 
-Install Git and Python 3.11 on the new computer, then run:
+Install Git and Python 3.14, then replace the placeholder with the actual GitHub repository URL:
 
 ```bash
 git clone https://github.com/<YOUR-USERNAME>/<YOUR-REPOSITORY>.git
 cd <YOUR-REPOSITORY>
 ```
 
-Replace `<YOUR-USERNAME>/<YOUR-REPOSITORY>` with the actual GitHub repository path. The cloned project must contain these files:
-
-```text
-app/
-  app.py
-  gbc_custom.pkl
-  requirements.txt
-```
-
-Do not copy the `.venv` folder from another computer. Create a new environment on each system.
+The cloned repository must contain `app/app.py`, `app/gbc_custom.pkl`, and `app/requirements.txt`. Do not copy the `.venv` folder from another computer; create a new environment locally.
 
 ## Setup on Windows
 
-Open PowerShell in the cloned repository and run:
+From PowerShell in the cloned repository:
 
 ```powershell
-py -3.11 -m venv .venv
+py -3.14 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --upgrade pip
 .\.venv\Scripts\python.exe -m pip install -r .\app\requirements.txt
 ```
 
 ## Setup on macOS or Linux
 
-Open a terminal in the cloned repository and run:
+From a terminal in the cloned repository:
 
 ```bash
-python3.11 -m venv .venv
+python3.14 -m venv .venv
 ./.venv/bin/python -m pip install --upgrade pip
 ./.venv/bin/python -m pip install -r ./app/requirements.txt
 ```
 
-Python 3.11 is recommended because the serialized model and the pinned dependencies were created for the older scikit-learn stack. Python 3.13 or 3.14 can require different package versions.
+The dependency pins include Python 3.14-compatible wheels. The serialized model was created with scikit-learn 1.2.x, while the app uses scikit-learn 1.9.1 with a compatibility shim during model loading.
 
 ## Run the application
-
-From the repository root, use the virtual-environment interpreter directly.
 
 Windows PowerShell:
 
@@ -60,17 +49,11 @@ macOS or Linux:
 ./.venv/bin/python -m streamlit run ./app/app.py
 ```
 
-Streamlit will print a local URL. Open:
+Open the URL printed by Streamlit, normally `http://localhost:8501`. Stop the server with `Ctrl+C`.
 
-```text
-http://localhost:8501
-```
+Always launch Streamlit through `.venv`. Running `streamlit run` directly may use a global Python installation without the project dependencies.
 
-Stop the server with `Ctrl+C`.
-
-Always run Streamlit through `.venv`. Running `streamlit run` by itself may use a global Python installation that does not have `cv2`, Streamlit, or the other project dependencies installed.
-
-## Alternative: use the Makefile
+## Alternative: Makefile
 
 If `make` is installed:
 
@@ -79,9 +62,9 @@ cd app
 make run
 ```
 
-The direct virtual-environment commands above are recommended on Windows because `make` is not installed by default.
+The direct virtual-environment commands are recommended on Windows because `make` is not installed by default.
 
-## How to use the app
+## Using the app
 
 1. Draw a digit on the canvas.
 2. Review the displayed **Model Input** image.
@@ -96,22 +79,16 @@ The input is converted to grayscale and passed to the classifier as a `1 x 784` 
 | --- | --- |
 | `app/app.py` | Streamlit interface, preprocessing, prediction, and probability chart. |
 | `app/gbc_custom.pkl` | Trained Histogram Gradient Boosting classifier. |
-| `app/requirements.txt` | Dependencies required by the app. |
+| `app/requirements.txt` | Python dependencies for the app. |
 | `app/Makefile` | Optional `make run` command. |
 | `Images/` | Evaluation plots, confusion matrices, transformed examples, and sample images. |
 | `*.ipynb` | Training, augmentation, evaluation, and prediction notebooks. |
-
-## Compatibility notes
-
-- The model was serialized with scikit-learn 1.2.x. `app.py` initializes the missing `_preprocessor` attribute when the model is loaded by a newer scikit-learn version.
-- The model path is resolved relative to `app.py`, so the app can be launched from the repository root.
-- Altair is pinned to `5.3.0` for compatibility with the current application environment.
 
 ## Troubleshooting
 
 ### `No module named cv2`
 
-The app was started with the wrong Python interpreter. Reinstall dependencies and run through `.venv`:
+Install dependencies and run with the project interpreter:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r .\app\requirements.txt
@@ -120,14 +97,12 @@ The app was started with the wrong Python interpreter. Reinstall dependencies an
 
 ### `No such file or directory: 'gbc_custom.pkl'`
 
-Run the application from the repository root using the command above. Confirm that `app/gbc_custom.pkl` exists in the cloned project.
+Run from the repository root using the command above and confirm that `app/gbc_custom.pkl` exists. The app resolves the model path relative to `app.py`.
 
 ### Port 8501 is already in use
 
-Run on another port:
-
 ```powershell
-.\.venv\Scripts\python.exe -m streamlit run .\app\app.py --server.port 8502
+.\.venv\Scripts\python.exe -m streamlit run .\app\app.py --server.port 8501
 ```
 
-Then open `http://localhost:8502`.
+Then open `http://localhost:8501`.
